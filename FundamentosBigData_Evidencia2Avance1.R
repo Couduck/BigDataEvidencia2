@@ -1,3 +1,3 @@
-
-informacionOriginal <- read.csv("BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20")
+#Lectura del archivo CSV que contiene la tabla, la ruta se debe modificar en caso de que se encuentre en otra computadora o si el archivo no se encuentra en la ubicación solicitada
+informacionOriginal <- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20.csv", check.names = FALSE, fileEncoding = "Latin1")
 informacionOriginal
