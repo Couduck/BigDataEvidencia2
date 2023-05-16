@@ -1,6 +1,8 @@
 # Incisio A: Delegacion con mas participantes
 informacionOriginal <- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20.csv", check.names = FALSE, fileEncoding = "Latin1")
 delegaciones <- c("01AGUASCALIENTES","02BAJA CALIFORNIA","03BAJA CALIFORNIA SUR","04CAMPECHE","05COAHUILA","06COLIMA","07CHIAPAS","08CHIHUAHUA","09CIUDAD DE MÉXICO","10DURANGO","11GUANAJUATO","12GUERRERO","13HIDALGO","14JALISCO","15MÉXICO","16MICHOACÁN DE OCAMPO","17MORELOS","18NAYARIT","19NUEVO LEÓN","20OAXACA","21PUEBLA","22QUERÉTARO","23QUINTANA ROO","24SAN LUIS POTOSÍ","25SINALOA","26SONORA","27TABASCO","28TAMAULIPAS","29TLAXCALA","30VERACRUZ DE IGNACIO DE LA LLAVE","31YUCATÁN","32ZACATECAS")
+valores <- c()
+
 
 mayorNumero <- 0
 mayorDelegacion <- ""
@@ -8,6 +10,7 @@ mayorDelegacion <- ""
 for(j in 1:32)
 {
   valorXDelegacion <- sum(informacionOriginal$Delegacion==delegaciones[j])
+  valores <- c(valores, valorXDelegacion)
   
   if(valorXDelegacion > mayorNumero)
   {
@@ -16,6 +19,10 @@ for(j in 1:32)
   }
 }
 
+dfIncA <- data.frame(delegaciones, valores)
+dfIncA <- dfIncA[order(dfIncA$valores,decreasing=TRUE),]
+barplot(height = dfIncA$valores, names = dfIncA$delegaciones, las = 2)
+
 print(mayorNumero)
 print(mayorDelegacion)
 
@@ -23,6 +30,7 @@ print(mayorDelegacion)
 # Inciso B: Porcentaje de particiapación por Delegación
 informacionOriginal <- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20.csv", check.names = FALSE, fileEncoding = "Latin1")
 delegaciones <- c("01AGUASCALIENTES","02BAJA CALIFORNIA","03BAJA CALIFORNIA SUR","04CAMPECHE","05COAHUILA","06COLIMA","07CHIAPAS","08CHIHUAHUA","09CIUDAD DE MÉXICO","10DURANGO","11GUANAJUATO","12GUERRERO","13HIDALGO","14JALISCO","15MÉXICO","16MICHOACÁN DE OCAMPO","17MORELOS","18NAYARIT","19NUEVO LEÓN","20OAXACA","21PUEBLA","22QUERÉTARO","23QUINTANA ROO","24SAN LUIS POTOSÍ","25SINALOA","26SONORA","27TABASCO","28TAMAULIPAS","29TLAXCALA","30VERACRUZ DE IGNACIO DE LA LLAVE","31YUCATÁN","32ZACATECAS")
+porcentajes <- c()
 total <- nrow(informacionOriginal)
 
 for(j in 1:32)
@@ -30,10 +38,17 @@ for(j in 1:32)
   valorXDelegacion <- sum(informacionOriginal$Delegacion==delegaciones[j])
   
   porcentajeXDelegacion <- valorXDelegacion/total
-  porcentajeXDelegacion <- porcentajeXDelegacion*100
+  porcentajeXDelegacion <- porcentajeXDelegacion
+  porcentajes <- c(porcentajes, porcentajeXDelegacion)
   
   cat(delegaciones[j]," ",porcentajeXDelegacion,"%","\n",sep = '')
 }
+
+dfIncB <- data.frame(delegaciones, porcentajes)
+dfIncB <- dfIncB[order(dfIncB$porcentajes,decreasing=TRUE),]
+pie(dfIncB$porcentajes, labels = dfIncB$delegaciones)
+#barplot(height = dfIncB$porcentajes, names = dfIncB$delegaciones, las = 2)
+
 
 # Inciso C: Preguntas respondidas, colocando quienes hayan contestado menos al principio
 informacionOriginal <- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20.csv", check.names = FALSE, fileEncoding = "Latin1")
