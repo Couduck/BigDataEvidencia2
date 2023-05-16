@@ -19,9 +19,10 @@ for(j in 1:32)
   }
 }
 
+par(mar = c(15, 4, 4, 4))
 dfIncA <- data.frame(delegaciones, valores)
 dfIncA <- dfIncA[order(dfIncA$valores,decreasing=TRUE),]
-barplot(height = dfIncA$valores, names = dfIncA$delegaciones, las = 2)
+barplot(height = dfIncA$valores, names = dfIncA$delegaciones, ylab="# guarderías participantes", main="Participantes por Delegación", las=2, ylim = c(0,850), col=c('red','black','green','blue', 'yellow'))
 
 print(mayorNumero)
 print(mayorDelegacion)
@@ -46,8 +47,10 @@ for(j in 1:32)
 
 dfIncB <- data.frame(delegaciones, porcentajes)
 dfIncB <- dfIncB[order(dfIncB$porcentajes,decreasing=TRUE),]
-pie(dfIncB$porcentajes, labels = dfIncB$delegaciones)
-#barplot(height = dfIncB$porcentajes, names = dfIncB$delegaciones, las = 2)
+par(mar = c(1, 1, 1, 1))
+pie(dfIncB$porcentajes, labels = dfIncB$delegaciones, main = "Porcentaje de Participacion total de todas las delegaciones")
+par(mar = c(15, 4, 4, 4))
+barplot(height = dfIncB$porcentajes, names = dfIncB$delegaciones, las = 2, col=c('red','black','green','blue', 'yellow'), ylab="% de participación", main="Variación del porcentaje entre delegaciones participantes")
 
 
 # Inciso C: Preguntas respondidas, colocando quienes hayan contestado menos al principio
@@ -64,18 +67,23 @@ for(j in 1:72)
 }
 
 listapreguntas <- data.frame(preguntas, vecesRespondidas)
+listapreguntas <- listapreguntas[order(listapreguntas$vecesRespondidas, decreasing=FALSE),]
+par(mar = c(15, 4, 4, 4))
+barplot(height = listapreguntas$vecesRespondidas, names = listapreguntas$preguntas, las = 2, ylab = "Número de respuestas registradas", main = "Número de veces que fue respondida cada pregunta" , col=c('red','black','green','blue', 'yellow'))
 
 print(listapreguntas[order(listapreguntas$vecesRespondidas, decreasing = FALSE),])
 
+
 #Inciso D: Porcentaje de preguntas respondidas por localidad
 informacionOriginal <- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Resultados-MPSG-Open-Data-oct10-feb20.csv", check.names = FALSE, fileEncoding = "Latin1")
-localidades<- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Localidades.csv", check.names = FALSE, fileEncoding = "Latin1")
+localidadesCSV<- read.csv("C:\\Users\\patoe\\Desktop\\Proyectos en R\\BigDataEvidencia2\\Evidencia2Avance1\\Localidades.csv", check.names = FALSE, fileEncoding = "Latin1")
 informacionOriginal["Pregunta 70"][is.na(informacionOriginal["Pregunta 70"])]<-0
+porcentajesPreguntasRespondidas <- c()
 
-for (j in 1:nrow(localidades)) 
+for (j in 1:nrow(localidadesCSV)) 
 {
   
-  tablaFIltradaXLocalidad <- informacionOriginal[informacionOriginal$Localidad == localidades[j,2],]
+  tablaFIltradaXLocalidad <- informacionOriginal[informacionOriginal$Localidad == localidadesCSV[j,2],]
   totalPreguntasRespondidasXLocalidad <- 0
   totalPreguntasRealizadasXLocalidad <- 74*nrow(tablaFIltradaXLocalidad)
   
@@ -84,8 +92,15 @@ for (j in 1:nrow(localidades))
     totalPreguntasRespondidasXLocalidad <- totalPreguntasRespondidasXLocalidad + sum(tablaFIltradaXLocalidad[i,] == 1 | tablaFIltradaXLocalidad[i,] == "SI" | tablaFIltradaXLocalidad[i,] == "Si")
   }
   
-  porcentajePreguntasRespondidasLocalidad <- totalPreguntasRespondidasXLocalidad/totalPreguntasRealizadasXLocalidad*100
+  porcentajePreguntasRespondidasLocalidad <- totalPreguntasRespondidasXLocalidad/totalPreguntasRealizadasXLocalidad
+  porcentajesPreguntasRespondidas <- c(porcentajesPreguntasRespondidas, porcentajePreguntasRespondidasLocalidad)
   
-  cat(localidades[j,2]," ",porcentajePreguntasRespondidasLocalidad,"%","\n",sep="")
+  cat(localidadesCSV[j,2]," ",porcentajePreguntasRespondidasLocalidad,"%","\n",sep="")
 
 } 
+
+localidades<-localidadesCSV$Localidad
+dfIncisoD <- data.frame(localidades, porcentajesPreguntasRespondidas)
+dfIncisoD <- dfIncisoD[order(dfIncisoD$porcentajesPreguntasRespondidas, decreasing = FALSE),]
+par(mar = c(10, 4,4,4))
+barplot(height = dfIncisoD$porcentajesPreguntasRespondidas, names = dfIncisoD$localidades, las = 2, cex.names = 0.1, ylab = "Porcentaje de preguntas respondidas", main="Porcentaje de preguntas respondidas por cada localidad" ,col=c('red','black','green','blue', 'yellow'))
